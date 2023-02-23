@@ -2,7 +2,16 @@
 
 Flutter Vehicle Keyboard
 
+#### 仿交管12123车牌键盘
+* 支持自动切换省份简称和字母键盘
+* 支持输入完成自动关闭键盘
+* 支持设置车牌长度
+* 过滤字母“I”
+  
 ## Getting Started
+
+import 'package:flutter_vehicle_keyboard/flutter_vehicle_keyboard.dart';
+
 
 This project is a starting point for a Flutter
 [plug-in package](https://flutter.dev/developing-packages/),
