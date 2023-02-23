@@ -121,17 +121,17 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ..._provinceRowStrings.map((e) => _buildProvinceRow(e)).toList(),
+            ..._provinceRowStrings.map((e) => _buildKeysRow(e)).toList(),
             _buildProvinceLastRow(),
           ]),
     );
   }
 
-  Widget _buildProvinceRow(List<String> provinces) {
+  Widget _buildKeysRow(List<String> keys) {
     return Container(
       height: 50,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        ...provinces.map((province) => _buildSignleKeyButton(province)).toList()
+        ...keys.map((key) => _buildSignleKeyButton(key)).toList()
       ]),
     );
   }
@@ -146,15 +146,16 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           style: TextStyle(fontSize: textSize, color: Colors.black),
         ),
         color: Colors.white,
+        disabledColor: Colors.black12,
         textTheme: ButtonTextTheme.accent,
         textColor: Colors.black,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(5)),
-        onPressed: () {
-          _onKeyDown(new KeyDownEvent(name));
-          // widget.callback(new KeyDownEvent(name));
-          // widget.controller.text += name;
-        },
+        onPressed: name == 'I'
+            ? null
+            : () {
+                _onKeyDown(new KeyDownEvent(name));
+              },
       ),
     );
   }
@@ -195,7 +196,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ..._letterRowStrings.map((e) => _buildProvinceRow(e)).toList(),
+            ..._letterRowStrings.map((e) => _buildKeysRow(e)).toList(),
             _buildLetterThirdRow(),
             _buildLetterLastRow(),
           ]),
