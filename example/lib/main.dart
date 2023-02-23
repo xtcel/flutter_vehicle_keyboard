@@ -16,8 +16,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
 
-
-
   /// 键盘的整体回调，根据不同的按钮事件来进行相应的逻辑实现
   // void _onKeyDown(KeyDownEvent data) {
   //   debugPrint("keyEvent:" + data.key);
@@ -41,22 +39,19 @@ class _MyAppState extends State<MyApp> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHome()
-    );
+    return MaterialApp(home: MyHome());
   }
 }
 
 class MyHome extends StatelessWidget {
-  bool showKeyboard = false;
+  bool showKeyboard = true;
 
   TextEditingController controller = new TextEditingController();
+  FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -66,36 +61,27 @@ class MyHome extends StatelessWidget {
       ),
       body: new Center(
           child: Column(
-            children: <Widget>[
-              VehicleField(),
-              // TextField(
-              //   showCursor: true,
-              //   readOnly: true,
-              //   decoration: InputDecoration(
-              //     border: UnderlineInputBorder(),
-              //     labelText: '请输入车牌',
-              //   ),
-              //   controller: controller,
-              //   focusNode: FocusNode(canRequestFocus: false),
-              //   onTap: () {
-              //     print("onTap input textfield");
-              //     FlutterVehicleKeyboard.showKeyboard(context: context, controller: controller);
-              //     // setState(() {
-              //     //   showKeyboard = true;
-              //     // });
-              //   },
-              // ),
-              RaisedButton(
-                child: Text("隐藏/显示"),
-                onPressed: () {
-                  // setState(() {
-                  //   showKeyboard = !showKeyboard;
-                  // });
-                },
-              )
-            ],
-          )),
+        children: <Widget>[
+          VehicleField(
+            focusNode: focusNode,
+            autoSwitchLetterKeyBoard: true,
+          ),
+          RaisedButton(
+            child: Text("隐藏/显示"),
+            onPressed: () {
+              showKeyboard = !showKeyboard;
+              if (showKeyboard) {
+                focusNode.requestFocus();
+              } else {
+                focusNode.unfocus();
+              }
+              // setState(() {
+              //   showKeyboard = !showKeyboard;
+              // });
+            },
+          )
+        ],
+      )),
     );
   }
 }
-

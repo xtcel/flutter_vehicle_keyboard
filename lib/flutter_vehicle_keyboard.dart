@@ -11,13 +11,32 @@ part 'vehicle_field.dart';
 class VehicleKeyboard extends StatefulWidget {
   TextEditingController controller;
 
-   VehicleKeyboard(this.controller, {Key key}) : super(key: key);
+  /// 车牌位数（含省份简称）
+  final int vehicleLength;
+
+  /// 输入一位省份后，自动切换到字母键盘
+  final bool autoSwitchLetterKeyBoard;
+
+  /// 输入完设定位数车牌后，自动隐藏键盘（默认位数为8位字母）
+  final bool autoHideKeyBoard;
+
+  final FocusNode focusNode;
+
+  VehicleKeyboard(this.controller,
+      {Key key,
+      this.vehicleLength = 8,
+      this.autoHideKeyBoard = false,
+      this.autoSwitchLetterKeyBoard = true,
+      this.focusNode})
+      : super(key: key);
 
   @override
   State<VehicleKeyboard> createState() => _VehicleKeyboardState();
 }
 
 class _VehicleKeyboardState extends State<VehicleKeyboard> {
+  bool showProviceKeyBoard = true;
+
   double keyWidth = 30;
   final double textSize = 20;
 
@@ -26,29 +45,55 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     ['浙', '皖', '闽', '赣', '鲁', '豫', '鄂', '湘', '粤', '琼'],
     ['川', '贵', '云', '陕', '甘', '青', '蒙', '桂', '宁', '新'],
   ];
-  List<String> _provinceKeyBoardLastRowStrings = ['藏', '使', '领', '警', '学', '港', '澳', ];
+  List<String> _provinceKeyBoardLastRowStrings = [
+    '藏',
+    '使',
+    '领',
+    '警',
+    '学',
+    '港',
+    '澳',
+  ];
 
   List<List<String>> _letterRowStrings = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
   ];
-  List<String> _letterKeyBoardThirdRowStrings = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
-  List<String> _letterKeyBoardLastRowStrings = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ];
+  List<String> _letterKeyBoardThirdRowStrings = [
+    'A',
+    'S',
+    'D',
+    'F',
+    'G',
+    'H',
+    'J',
+    'K',
+    'L'
+  ];
+  List<String> _letterKeyBoardLastRowStrings = [
+    'Z',
+    'X',
+    'C',
+    'V',
+    'B',
+    'N',
+    'M',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return
-      Container(
-        height: 280,
-        color: Colors.white,
-        child: Column(
+    return Container(
+      height: 280,
+      color: Colors.white,
+      child: Column(
         children: [
           _buildTopToolsBar(),
-          // _buildProvinceKeyBoard(),
-          _buildLetterKeyBoard(),
+          showProviceKeyBoard
+              ? _buildProvinceKeyBoard()
+              : _buildLetterKeyBoard(),
         ],
-    ),
-      );
+      ),
+    );
   }
 
   /// 顶部工具栏
@@ -58,9 +103,11 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          TextButton(onPressed: () {
-
-          }, child: Text("完成"))
+          TextButton(
+              onPressed: () {
+                widget.focusNode?.unfocus();
+              },
+              child: Text("完成"))
         ],
       ),
     );
@@ -74,22 +121,18 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ... _provinceRowStrings.map((e) => _buildProvinceRow(e)).toList(),
+            ..._provinceRowStrings.map((e) => _buildProvinceRow(e)).toList(),
             _buildProvinceLastRow(),
-          ]
-      ),
+          ]),
     );
   }
 
   Widget _buildProvinceRow(List<String> provinces) {
     return Container(
       height: 50,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children:[
-            ... provinces.map((province) => _buildSignleKeyButton(province)).toList()
-          ]
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        ...provinces.map((province) => _buildSignleKeyButton(province)).toList()
+      ]),
     );
   }
 
@@ -123,9 +166,21 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(width: 55, child: RaisedButton(onPressed: () {}, child: Text("ABC"))),
-          ... _provinceKeyBoardLastRowStrings.map((province) => _buildSignleKeyButton(province)).toList(),
-          Container(width: 55, child: RaisedButton(onPressed: () {}, child: Icon(Icons.arrow_back_rounded))),
+          Container(
+              width: 55,
+              child: RaisedButton(
+                  onPressed: () =>
+                      _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_LETTER)),
+                  child: Text("ABC"))),
+          ..._provinceKeyBoardLastRowStrings
+              .map((province) => _buildSignleKeyButton(province))
+              .toList(),
+          Container(
+              width: 55,
+              child: RaisedButton(
+                  onPressed: () => _onKeyDown(
+                      new KeyDownEvent(KeyDownEvent.KEYNAME_BACKSPACE)),
+                  child: Icon(Icons.arrow_back_rounded))),
           // IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_rounded),),
         ],
       ),
@@ -140,11 +195,10 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ... _letterRowStrings.map((e) => _buildProvinceRow(e)).toList(),
+            ..._letterRowStrings.map((e) => _buildProvinceRow(e)).toList(),
             _buildLetterThirdRow(),
             _buildLetterLastRow(),
-          ]
-      ),
+          ]),
     );
   }
 
@@ -153,12 +207,11 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     return Container(
       padding: const EdgeInsets.only(left: 25, right: 25),
       height: 50,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:[
-            ... _letterKeyBoardThirdRowStrings.map((province) => _buildSignleKeyButton(province)).toList()
-          ]
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        ..._letterKeyBoardThirdRowStrings
+            .map((province) => _buildSignleKeyButton(province))
+            .toList()
+      ]),
     );
   }
 
@@ -169,76 +222,125 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(width: 55, child: RaisedButton(onPressed: () {}, child: Text("省份"))),
-          ... _letterKeyBoardLastRowStrings.map((province) => _buildSignleKeyButton(province)).toList(),
-          Container(width: 55, child: RaisedButton(onPressed: () {}, child: Icon(Icons.arrow_back_rounded))),
+          Container(
+              width: 55,
+              child: RaisedButton(
+                  onPressed: () => _onKeyDown(
+                      new KeyDownEvent(KeyDownEvent.KEYNAME_PROVINCE)),
+                  child: Text("省份"))),
+          ..._letterKeyBoardLastRowStrings
+              .map((province) => _buildSignleKeyButton(province))
+              .toList(),
+          Container(
+              width: 55,
+              child: RaisedButton(
+                  onPressed: () => _onKeyDown(
+                      new KeyDownEvent(KeyDownEvent.KEYNAME_BACKSPACE)),
+                  child: Icon(Icons.arrow_back_rounded))),
           // IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_rounded),),
         ],
       ),
     );
   }
 
-    /// 键盘的整体回调，根据不同的按钮事件来进行相应的逻辑实现
+  /// 键盘的整体回调，根据不同的按钮事件来进行相应的逻辑实现
   void _onKeyDown(KeyDownEvent data) {
     debugPrint("pressKey:" + data.key);
 
-    if (data.isDelete()) {
-      widget.controller.text =
-          widget.controller.text.substring(0, widget.controller.text.length - 1);
-      // switchContent(widget.controller);
-    } else if (data.isMore()) {
-      // setState(() {
-      //   height = maxHeight;
-      //   isFirst = false;
-      // });
+    if (data.isBackSpaceKey()) {
+      if (widget.controller.text.length == 0) {
+        /// 无内容处理
+        return;
+      }
 
-    } else if (data.isProvince()) {
-      // setState(() {
-      //   isFirst = true;
-      //   height = minHeight;
-      // });
-    } else {
-      widget.controller.text += data.key;
+      widget.controller.text = widget.controller.text
+          .substring(0, widget.controller.text.length - 1);
+
       /// 保持光标
       lastCursor(textEditingController: widget.controller);
-      // switchContent(widget.controller);
+
+      if (widget.controller.text.length == 0) {
+        /// 输入第一位时显示省份键盘
+        setState(() {
+          showProviceKeyBoard = true;
+        });
+      }
+    } else if (data.isLetterKey()) {
+      setState(() {
+        showProviceKeyBoard = false;
+      });
+    } else if (data.isProvinceKey()) {
+      setState(() {
+        showProviceKeyBoard = true;
+      });
+    } else {
+      if (widget.controller.text.length >= widget.vehicleLength) {
+        return;
+      }
+
+      widget.controller.text += data.key;
+
+      /// 保持光标
+      lastCursor(textEditingController: widget.controller);
+      if (widget.autoHideKeyBoard &&
+          (widget.controller.text.length == widget.vehicleLength)) {
+        // 隐藏键盘
+        widget.focusNode?.unfocus();
+        return;
+      }
+
+      /// 输入完省份，切换到字母键盘
+      if (data.key.contains(new RegExp(r'[\u4e00-\u9fa5]')) &&
+          widget.autoSwitchLetterKeyBoard) {
+        setState(() {
+          showProviceKeyBoard = false;
+        });
+      }
     }
   }
 
-  lastCursor({@required TextEditingController textEditingController}){
+  lastCursor({@required TextEditingController textEditingController}) {
     /// 保持光标在最后
     final length = textEditingController.text.length;
-    textEditingController.selection = TextSelection(baseOffset:length , extentOffset:length);
+    textEditingController.selection =
+        TextSelection(baseOffset: length, extentOffset: length);
   }
 
-  delCursor({@required TextEditingController textEditingController}){
-    if(textEditingController != null && textEditingController.value.text != "")
-      textEditingController.text = textEditingController.text.substring(0,textEditingController.text.length - 1);
+  delCursor({@required TextEditingController textEditingController}) {
+    if (textEditingController != null && textEditingController.value.text != "")
+      textEditingController.text = textEditingController.text
+          .substring(0, textEditingController.text.length - 1);
   }
 }
 
 /// 点击事件
 class KeyDownEvent {
+  static const KEYNAME_BACKSPACE = 'backspace';
+  static const KEYNAME_CLOSE = 'close';
+  static const KEYNAME_CONFIRM = 'confirm';
+  static const KEYNAME_PROVINCE = 'province';
+  static const KEYNAME_LETTER = 'letter';
+
   //当前点击的按钮所代表的值
   String key;
 
   KeyDownEvent(this.key);
 
-  bool isDelete() => this.key == "del";
+  bool isBackSpaceKey() => this.key == KEYNAME_BACKSPACE;
 
-  bool isMore() => this.key == "more";
+  bool isProvinceKey() => this.key == KEYNAME_PROVINCE;
 
-  bool isProvince() => this.key == "province";
+  bool isCloseKey() => this.key == KEYNAME_CLOSE;
 
-  bool isClose() => this.key == "close";
+  bool isConfirmKey() => this.key == KEYNAME_CONFIRM;
 
-  bool isCommit() => this.key == "commit";
+  bool isLetterKey() => this.key == KEYNAME_LETTER;
 }
-
 
 class FlutterVehicleKeyboard {
   /// 显示键盘
-  static bool showKeyboard({ BuildContext context, TextEditingController controller}) {
+  static bool showKeyboard(
+      {BuildContext context, TextEditingController controller}) {
     showModalBottomSheet(
         context: context,
         elevation: 0.0,
