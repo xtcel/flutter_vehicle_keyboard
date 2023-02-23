@@ -107,7 +107,8 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
               onPressed: () {
                 widget.focusNode?.unfocus();
               },
-              child: Text("完成"))
+              child: Text("完成",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)))
         ],
       ),
     );
@@ -168,11 +169,17 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-              width: 55,
-              child: RaisedButton(
-                  onPressed: () =>
-                      _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_LETTER)),
-                  child: Text("ABC"))),
+            width: 55,
+            child: TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
+              child: Text(
+                "ABC",
+                style: TextStyle(fontSize: 18, color: Colors.black87),
+              ),
+              onPressed: () =>
+                  _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_LETTER)),
+            ),
+          ),
           ..._provinceKeyBoardLastRowStrings
               .map((province) => _buildSignleKeyButton(province))
               .toList(),
@@ -225,10 +232,15 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         children: [
           Container(
               width: 55,
-              child: RaisedButton(
-                  onPressed: () => _onKeyDown(
-                      new KeyDownEvent(KeyDownEvent.KEYNAME_PROVINCE)),
-                  child: Text("省份"))),
+              child: TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
+                child: Text(
+                  "省份",
+                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                ),
+                onPressed: () =>
+                    _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_PROVINCE)),
+              )),
           ..._letterKeyBoardLastRowStrings
               .map((province) => _buildSignleKeyButton(province))
               .toList(),
