@@ -13,10 +13,15 @@ class VehicleField extends StatefulWidget {
   /// 显示键盘
   bool showKeyBoard;
 
+  /// focus node
   final FocusNode focusNode;
+
+  /// text editing controller
+  TextEditingController controller;
 
   VehicleField(
       {Key key,
+      this.controller,
       this.vehicleLength = 8,
       this.autoHideKeyBoard = false,
       this.autoSwitchLetterKeyBoard = true,
@@ -30,7 +35,7 @@ class VehicleField extends StatefulWidget {
 
 class _VehicleFieldState extends State<VehicleField> {
   FocusNode _focusNode = FocusNode();
-  final TextEditingController controller = TextEditingController();
+  TextEditingController _controller = TextEditingController();
 
   OverlayEntry _overlayEntry;
 
@@ -40,6 +45,10 @@ class _VehicleFieldState extends State<VehicleField> {
 
     if (widget.focusNode != null) {
       _focusNode = widget.focusNode;
+    }
+
+    if (widget.controller != null) {
+      _controller = widget.controller;
     }
 
     _focusNode.addListener(() {
@@ -67,7 +76,7 @@ class _VehicleFieldState extends State<VehicleField> {
               child: Material(
                   elevation: 4.0,
                   child: VehicleKeyboard(
-                    controller,
+                    _controller,
                     focusNode: _focusNode,
                     vehicleLength: widget.vehicleLength,
                     autoHideKeyBoard: widget.autoHideKeyBoard,
@@ -80,7 +89,7 @@ class _VehicleFieldState extends State<VehicleField> {
   Widget build(BuildContext context) {
     return TextField(
       focusNode: this._focusNode,
-      controller: controller,
+      controller: _controller,
       showCursor: true,
       readOnly: true,
       decoration: InputDecoration(labelText: '请输入车牌'),

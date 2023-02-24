@@ -43,11 +43,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyHome());
+    return MaterialApp(home: MyHomePage());
   }
 }
 
-class MyHome extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String vehicleNumber = "";
   bool showKeyboard = true;
 
   TextEditingController controller = new TextEditingController();
@@ -65,21 +71,35 @@ class MyHome extends StatelessWidget {
           VehicleField(
             focusNode: focusNode,
             autoSwitchLetterKeyBoard: true,
+            controller: controller,
           ),
-          RaisedButton(
-            child: Text("隐藏/显示"),
-            onPressed: () {
-              showKeyboard = !showKeyboard;
-              if (showKeyboard) {
-                focusNode.requestFocus();
-              } else {
-                focusNode.unfocus();
-              }
-              // setState(() {
-              //   showKeyboard = !showKeyboard;
-              // });
-            },
-          )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
+                child: Text("隐藏/显示"),
+                onPressed: () {
+                  showKeyboard = !showKeyboard;
+                  if (showKeyboard) {
+                    focusNode.requestFocus();
+                  } else {
+                    focusNode.unfocus();
+                  }
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              RaisedButton(
+                child: Text("获取车牌号"),
+                onPressed: () {
+                  vehicleNumber = controller.text;
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+          Text(vehicleNumber),
         ],
       )),
     );
