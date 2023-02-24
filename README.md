@@ -8,17 +8,76 @@ Flutter Vehicle Keyboard
 * 支持设置车牌长度
 * 过滤字母“I”
   
-## Getting Started
+## 开始使用
 
+### 添加依赖
+你可以使用一下命令将 flutter_vehicle_keyboard 的最新稳定版依赖添加至你的项目：
+```
+dependencies:
+  flutter_vehicle_keyboard: ^replace-with-latest-version
+```
+使用示例：
+```
 import 'package:flutter_vehicle_keyboard/flutter_vehicle_keyboard.dart';
 
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+class _MyHomePageState extends State<MyHomePage> {
+  String vehicleNumber = "";
+  bool showKeyboard = true;
 
+  TextEditingController controller = new TextEditingController();
+  FocusNode focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('仿12123车牌输入键盘'),
+      ),
+      body: new Center(
+          child: Column(
+        children: <Widget>[
+          VehicleField(
+            focusNode: focusNode,
+            autoSwitchLetterKeyBoard: true,
+            controller: controller,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
+                child: Text("隐藏/显示"),
+                onPressed: () {
+                  showKeyboard = !showKeyboard;
+                  if (showKeyboard) {
+                    focusNode.requestFocus();
+                  } else {
+                    focusNode.unfocus();
+                  }
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              RaisedButton(
+                child: Text("获取车牌号"),
+                onPressed: () {
+                  vehicleNumber = controller.text;
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+          Text(vehicleNumber),
+        ],
+      )),
+    );
+  }
+}
+
+```

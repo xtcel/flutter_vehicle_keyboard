@@ -1,8 +1,7 @@
 name: flutter_vehicle_keyboard
 description: Flutter Vehicle Keyboard
 version: 0.0.1
-author: xtcel
-homepage: 
+homepage: https://github.com/xtcel/flutter_vehicle_keyboard
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
