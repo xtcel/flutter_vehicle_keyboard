@@ -84,6 +84,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
   Widget build(BuildContext context) {
     return Container(
       height: 280,
+      width: MediaQuery.of(context).size.width,
       color: Colors.white,
       child: Column(
         children: [
@@ -108,7 +109,10 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
                 widget.focusNode?.unfocus();
               },
               child: Text("完成",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)))
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)))
         ],
       ),
     );
@@ -118,6 +122,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
   Widget _buildProvinceKeyBoard() {
     return Container(
       height: 210,
+      width: MediaQuery.of(context).size.width,
       child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -199,6 +204,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
   Widget _buildLetterKeyBoard() {
     return Container(
       height: 210,
+      width: MediaQuery.of(context).size.width,
       child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,

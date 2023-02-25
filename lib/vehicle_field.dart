@@ -19,6 +19,9 @@ class VehicleField extends StatefulWidget {
   /// text editing controller
   TextEditingController controller;
 
+  // TextFieldProps
+  TextAlign textAlign;
+
   VehicleField(
       {Key key,
       this.controller,
@@ -26,7 +29,8 @@ class VehicleField extends StatefulWidget {
       this.autoHideKeyBoard = false,
       this.autoSwitchLetterKeyBoard = true,
       this.showKeyBoard,
-      this.focusNode})
+      this.focusNode,
+      this.textAlign})
       : super(key: key);
 
   @override
@@ -67,12 +71,15 @@ class _VehicleFieldState extends State<VehicleField> {
     RenderBox renderBox = context.findRenderObject();
     var size = renderBox.size;
     // var offset = renderBox.localToGlobal(Offset.zero);
+    double width = MediaQuery.of(context).size.width;
+
+    print(width);
 
     return OverlayEntry(
         builder: (context) => Positioned(
               left: 0,
               bottom: 0,
-              width: size.width,
+              width: width,
               child: Material(
                   elevation: 4.0,
                   child: VehicleKeyboard(
@@ -90,6 +97,7 @@ class _VehicleFieldState extends State<VehicleField> {
     return TextField(
       focusNode: this._focusNode,
       controller: _controller,
+      textAlign: widget.textAlign ?? TextAlign.start,
       showCursor: true,
       readOnly: true,
       decoration: InputDecoration(labelText: '请输入车牌'),
