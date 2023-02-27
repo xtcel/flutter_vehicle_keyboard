@@ -22,6 +22,8 @@ class VehicleField extends StatefulWidget {
   // TextFieldProps
   TextAlign textAlign;
 
+  InputDecoration inputDecoration;
+
   VehicleField(
       {Key key,
       this.controller,
@@ -30,7 +32,9 @@ class VehicleField extends StatefulWidget {
       this.autoSwitchLetterKeyBoard = true,
       this.showKeyBoard,
       this.focusNode,
-      this.textAlign})
+      this.textAlign,
+      this.inputDecoration,
+      })
       : super(key: key);
 
   @override
@@ -100,7 +104,7 @@ class _VehicleFieldState extends State<VehicleField> {
       textAlign: widget.textAlign ?? TextAlign.start,
       showCursor: true,
       readOnly: true,
-      decoration: InputDecoration(labelText: '请输入车牌'),
+      decoration: widget.inputDecoration??InputDecoration(labelText: '请输入车牌'),
     );
   }
 }
