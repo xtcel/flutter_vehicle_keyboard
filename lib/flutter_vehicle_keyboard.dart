@@ -157,7 +157,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         textColor: Colors.black,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(5)),
-        onPressed: name == 'I'
+        onPressed: name == 'I'||name == 'O'
             ? null
             : () {
                 _onKeyDown(new KeyDownEvent(name));
@@ -174,7 +174,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            width: 55,
+            width: 58,
             child: TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
               child: Text(
@@ -237,7 +237,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-              width: 55,
+              width: 58,
               child: TextButton(
                 style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
                 child: Text(
@@ -271,12 +271,30 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         /// 无内容处理
         return;
       }
+      //输入的内容
+      String content = widget.controller.text;
+      //光标位置
+      int baseOffset = widget.controller?.selection?.baseOffset??0;
 
-      widget.controller.text = widget.controller.text
-          .substring(0, widget.controller.text.length - 1);
-
-      /// 保持光标
-      lastCursor(textEditingController: widget.controller);
+      print("baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
+      //如果光标在开头
+      if(baseOffset == 0){
+        return;
+      }
+      //如果光标在最后，直接裁剪
+      else if(baseOffset == content.length){
+        widget.controller.text = content.substring(0, content.length - 1);
+        /// 保持光标
+        lastCursor(textEditingController: widget.controller);
+      }else{
+        String startStr = "";
+        String endStr = "";
+        startStr = content.substring(0, baseOffset - 1);
+        endStr = content.substring(baseOffset, content.length);
+        widget.controller.text = startStr+endStr;
+        widget.controller.selection =
+            TextSelection(baseOffset: baseOffset-1, extentOffset: baseOffset-1);
+      }
 
       if (widget.controller.text.length == 0) {
         /// 输入第一位时显示省份键盘
@@ -323,12 +341,6 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     final length = textEditingController.text.length;
     textEditingController.selection =
         TextSelection(baseOffset: length, extentOffset: length);
-  }
-
-  delCursor({@required TextEditingController textEditingController}) {
-    if (textEditingController != null && textEditingController.value.text != "")
-      textEditingController.text = textEditingController.text
-          .substring(0, textEditingController.text.length - 1);
   }
 }
 
