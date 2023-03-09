@@ -20,9 +20,11 @@ class VehicleField extends StatefulWidget {
   TextEditingController controller;
 
   // TextFieldProps
-  TextAlign textAlign;
+  final TextAlign textAlign;
+  //字体样式
+  final TextStyle textStyle;
 
-  InputDecoration inputDecoration;
+  final InputDecoration inputDecoration;
 
   VehicleField(
       {Key key,
@@ -34,6 +36,7 @@ class VehicleField extends StatefulWidget {
       this.focusNode,
       this.textAlign,
       this.inputDecoration,
+        this.textStyle,
       })
       : super(key: key);
 
@@ -99,6 +102,7 @@ class _VehicleFieldState extends State<VehicleField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      style: widget.textStyle??TextStyle(fontSize: 14, color: Colors.black87),
       focusNode: this._focusNode,
       controller: _controller,
       textAlign: widget.textAlign ?? TextAlign.start,
