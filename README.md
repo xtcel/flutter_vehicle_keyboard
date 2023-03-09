@@ -20,7 +20,6 @@ dependencies:
 ```
 import 'package:flutter_vehicle_keyboard/flutter_vehicle_keyboard.dart';
 
-
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -42,10 +41,28 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Center(
           child: Column(
         children: <Widget>[
-          VehicleField(
-            focusNode: focusNode,
-            autoSwitchLetterKeyBoard: true,
-            controller: controller,
+          // VehicleField(
+          //   focusNode: focusNode,
+          //   autoSwitchLetterKeyBoard: true,
+          //   controller: controller,
+          // ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('车牌号码：'),
+                Expanded(
+                  child: VehicleField(
+                    focusNode: focusNode,
+                    autoSwitchLetterKeyBoard: true,
+                    controller: controller,
+                    textAlign: TextAlign.end,
+                  ),
+                )
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
