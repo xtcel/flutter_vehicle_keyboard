@@ -85,7 +85,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     return Container(
       height: 280,
       width: MediaQuery.of(context).size.width,
-      color: Colors.white,
+      color: Color.fromRGBO(0, 0, 0, 0.6),
       child: Column(
         children: [
           _buildTopToolsBar(),
@@ -111,8 +111,8 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
               child: Text("完成",
                   style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)))
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white)))
         ],
       ),
     );
@@ -149,12 +149,12 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         child: Text(
           name,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: textSize, color: Colors.black),
+          style: TextStyle(fontSize: textSize, color: Colors.white, fontWeight: FontWeight.w400),
         ),
-        color: Colors.white,
+        color: Color.fromRGBO(255, 255, 255, 0.5),
         disabledColor: Colors.black12,
         textTheme: ButtonTextTheme.accent,
-        textColor: Colors.black,
+        textColor: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(5)),
         onPressed: name == 'I'||name == 'O'
@@ -176,10 +176,10 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           Container(
             width: 58,
             child: TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
+              style: TextButton.styleFrom(backgroundColor: Color(0xFF3377FF)),
               child: Text(
                 "ABC",
-                style: TextStyle(fontSize: 18, color: Colors.black87),
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400),
               ),
               onPressed: () =>
                   _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_LETTER)),
@@ -239,10 +239,10 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
           Container(
               width: 58,
               child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.grey[200]),
+                style: TextButton.styleFrom(backgroundColor: Color(0xFF3377FF)),
                 child: Text(
                   "省份",
-                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400),
                 ),
                 onPressed: () =>
                     _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_PROVINCE)),
