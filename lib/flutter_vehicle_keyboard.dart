@@ -311,14 +311,40 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         showProviceKeyBoard = true;
       });
     } else {
-      if (widget.controller.text.length >= widget.vehicleLength) {
+      int length = widget.controller.text.length;
+      if (length >= widget.vehicleLength) {
         return;
       }
 
-      widget.controller.text += data.key;
+      //输入的内容
+      String content = data.key;
+      String oldContent = widget.controller.text;
+      //光标位置
+      int baseOffset = widget.controller?.selection?.baseOffset??0;
 
-      /// 保持光标
-      lastCursor(textEditingController: widget.controller);
+      print("baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
+      //如果光标在开头
+      if(baseOffset == 0){
+        widget.controller.text = content + oldContent;
+        widget.controller.selection =
+            TextSelection(baseOffset: baseOffset+content.length, extentOffset: baseOffset+content.length);
+      }
+      //如果光标在最后，直接拼接
+      else if(baseOffset == oldContent.length){
+        widget.controller.text = oldContent + content;
+        /// 保持光标
+        lastCursor(textEditingController: widget.controller);
+      }else{
+        //光标在中间
+        String startStr = "";
+        String endStr = "";
+        startStr = oldContent.substring(0, baseOffset);
+        endStr = oldContent.substring(baseOffset, oldContent.length);
+        widget.controller.text = startStr+content+endStr;
+        widget.controller.selection =
+            TextSelection(baseOffset: baseOffset+content.length, extentOffset: baseOffset+content.length);
+      }
+
       if (widget.autoHideKeyBoard &&
           (widget.controller.text.length == widget.vehicleLength)) {
         // 隐藏键盘
