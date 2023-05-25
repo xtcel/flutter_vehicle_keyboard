@@ -1,9 +1,6 @@
 library flutter_vehicle_keyboard;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 part 'vehicle_field.dart';
 
@@ -20,10 +17,10 @@ class VehicleKeyboard extends StatefulWidget {
   /// 输入完设定位数车牌后，自动隐藏键盘（默认位数为8位字母）
   final bool autoHideKeyBoard;
 
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   VehicleKeyboard(this.controller,
-      {Key key,
+      {Key? key,
       this.vehicleLength = 8,
       this.autoHideKeyBoard = false,
       this.autoSwitchLetterKeyBoard = true,
@@ -85,7 +82,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     return Container(
       height: 280,
       width: MediaQuery.of(context).size.width,
-      color: Color.fromRGBO(0, 0, 0, 0.6),
+      color: Color(0xFFE7E8EA),
       child: Column(
         children: [
           _buildTopToolsBar(),
@@ -101,6 +98,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
   Widget _buildTopToolsBar() {
     return Container(
       height: 40,
+      color: Color(0xFFF9F9F9),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -112,7 +110,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white)))
+                      color: Colors.black)))
         ],
       ),
     );
@@ -145,19 +143,23 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
   Widget _buildSignleKeyButton(String name) {
     return Container(
       width: keyWidth,
-      child: RaisedButton(
+      child: TextButton(
+        style: TextButton.styleFrom(
+            backgroundColor: Colors.white,
+            disabledBackgroundColor: Color(0xFFE0E0E0),
+            padding: EdgeInsets.all(0),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
         child: Text(
           name,
+          maxLines: 1,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: textSize, color: Colors.white, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              fontSize: textSize,
+              color: Colors.black87,
+              fontWeight: FontWeight.w400),
         ),
-        color: Color.fromRGBO(255, 255, 255, 0.5),
-        disabledColor: Colors.black12,
-        textTheme: ButtonTextTheme.accent,
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.circular(5)),
-        onPressed: name == 'I'||name == 'O'
+        onPressed: name == 'I' || name == 'O'
             ? null
             : () {
                 _onKeyDown(new KeyDownEvent(name));
@@ -174,12 +176,18 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            width: 58,
+            width: 50,
             child: TextButton(
-              style: TextButton.styleFrom(backgroundColor: Color(0xFF3377FF)),
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFD0D1D3),
+                padding: const EdgeInsets.all(0),
+              ),
               child: Text(
                 "ABC",
-                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w400),
               ),
               onPressed: () =>
                   _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_LETTER)),
@@ -189,12 +197,12 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
               .map((province) => _buildSignleKeyButton(province))
               .toList(),
           Container(
-              width: 55,
-              child: RaisedButton(
+              width: 50,
+              child: MaterialButton(
+                  color: Color(0xFFD0D1D3),
                   onPressed: () => _onKeyDown(
                       new KeyDownEvent(KeyDownEvent.KEYNAME_BACKSPACE)),
                   child: Icon(Icons.arrow_back_rounded))),
-          // IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_rounded),),
         ],
       ),
     );
@@ -237,12 +245,18 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-              width: 58,
+              width: 50,
               child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Color(0xFF3377FF)),
+                style: TextButton.styleFrom(
+                  backgroundColor: Color(0xFFD0D1D3),
+                  padding: const EdgeInsets.all(0),
+                ),
                 child: Text(
                   "省份",
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w400),
                 ),
                 onPressed: () =>
                     _onKeyDown(new KeyDownEvent(KeyDownEvent.KEYNAME_PROVINCE)),
@@ -251,8 +265,9 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
               .map((province) => _buildSignleKeyButton(province))
               .toList(),
           Container(
-              width: 55,
-              child: RaisedButton(
+              width: 50,
+              child: MaterialButton(
+                  color: Color(0xFFD0D1D3),
                   onPressed: () => _onKeyDown(
                       new KeyDownEvent(KeyDownEvent.KEYNAME_BACKSPACE)),
                   child: Icon(Icons.arrow_back_rounded))),
@@ -274,26 +289,28 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
       //输入的内容
       String content = widget.controller.text;
       //光标位置
-      int baseOffset = widget.controller?.selection?.baseOffset??0;
+      int baseOffset = widget.controller.selection.baseOffset ?? 0;
 
-      print("baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
+      print(
+          "baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
       //如果光标在开头
-      if(baseOffset == 0){
+      if (baseOffset == 0) {
         return;
       }
       //如果光标在最后，直接裁剪
-      else if(baseOffset == content.length){
+      else if (baseOffset == content.length) {
         widget.controller.text = content.substring(0, content.length - 1);
+
         /// 保持光标
         lastCursor(textEditingController: widget.controller);
-      }else{
+      } else {
         String startStr = "";
         String endStr = "";
         startStr = content.substring(0, baseOffset - 1);
         endStr = content.substring(baseOffset, content.length);
-        widget.controller.text = startStr+endStr;
-        widget.controller.selection =
-            TextSelection(baseOffset: baseOffset-1, extentOffset: baseOffset-1);
+        widget.controller.text = startStr + endStr;
+        widget.controller.selection = TextSelection(
+            baseOffset: baseOffset - 1, extentOffset: baseOffset - 1);
       }
 
       if (widget.controller.text.length == 0) {
@@ -320,29 +337,33 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
       String content = data.key;
       String oldContent = widget.controller.text;
       //光标位置
-      int baseOffset = widget.controller?.selection?.baseOffset??0;
+      int baseOffset = widget.controller.selection.baseOffset ?? 0;
 
-      print("baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
+      print(
+          "baseOffset=$baseOffset aaa=${widget.controller.value.text} bbb=${widget.controller.text}");
       //如果光标在开头
-      if(baseOffset == 0){
+      if (baseOffset == 0) {
         widget.controller.text = content + oldContent;
-        widget.controller.selection =
-            TextSelection(baseOffset: baseOffset+content.length, extentOffset: baseOffset+content.length);
+        widget.controller.selection = TextSelection(
+            baseOffset: baseOffset + content.length,
+            extentOffset: baseOffset + content.length);
       }
       //如果光标在最后，直接拼接
-      else if(baseOffset == oldContent.length){
+      else if (baseOffset == oldContent.length) {
         widget.controller.text = oldContent + content;
+
         /// 保持光标
         lastCursor(textEditingController: widget.controller);
-      }else{
+      } else {
         //光标在中间
         String startStr = "";
         String endStr = "";
         startStr = oldContent.substring(0, baseOffset);
         endStr = oldContent.substring(baseOffset, oldContent.length);
-        widget.controller.text = startStr+content+endStr;
-        widget.controller.selection =
-            TextSelection(baseOffset: baseOffset+content.length, extentOffset: baseOffset+content.length);
+        widget.controller.text = startStr + content + endStr;
+        widget.controller.selection = TextSelection(
+            baseOffset: baseOffset + content.length,
+            extentOffset: baseOffset + content.length);
       }
 
       if (widget.autoHideKeyBoard &&
@@ -362,7 +383,7 @@ class _VehicleKeyboardState extends State<VehicleKeyboard> {
     }
   }
 
-  lastCursor({@required TextEditingController textEditingController}) {
+  lastCursor({required TextEditingController textEditingController}) {
     /// 保持光标在最后
     final length = textEditingController.text.length;
     textEditingController.selection =
@@ -397,12 +418,15 @@ class KeyDownEvent {
 class FlutterVehicleKeyboard {
   /// 显示键盘
   static bool showKeyboard(
-      {BuildContext context, TextEditingController controller}) {
+      {required BuildContext context,
+      required TextEditingController controller}) {
     showModalBottomSheet(
         context: context,
         elevation: 0.0,
         builder: (BuildContext context) {
-          return VehicleKeyboard(controller);
+          return VehicleKeyboard(
+            controller,
+          );
         });
     return true;
   }

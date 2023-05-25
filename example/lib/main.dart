@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_vehicle_keyboard/flutter_vehicle_keyboard.dart';
 
 void main() {
@@ -94,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RaisedButton(
+              MaterialButton(
                 child: Text("隐藏/显示"),
                 onPressed: () {
                   showKeyboard = !showKeyboard;
@@ -108,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 width: 10,
               ),
-              RaisedButton(
+              MaterialButton(
                 child: Text("获取车牌号"),
                 onPressed: () {
                   vehicleNumber = controller.text;

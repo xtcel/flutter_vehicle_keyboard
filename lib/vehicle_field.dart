@@ -14,31 +14,30 @@ class VehicleField extends StatefulWidget {
   bool showKeyBoard;
 
   /// focus node
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// text editing controller
-  TextEditingController controller;
+  final TextEditingController? controller;
 
   // TextFieldProps
-  final TextAlign textAlign;
+  final TextAlign? textAlign;
   //字体样式
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
-  final InputDecoration inputDecoration;
+  final InputDecoration? inputDecoration;
 
-  VehicleField(
-      {Key key,
-      this.controller,
-      this.vehicleLength = 8,
-      this.autoHideKeyBoard = false,
-      this.autoSwitchLetterKeyBoard = true,
-      this.showKeyBoard,
-      this.focusNode,
-      this.textAlign,
-      this.inputDecoration,
-        this.textStyle,
-      })
-      : super(key: key);
+  VehicleField({
+    Key? key,
+    this.controller,
+    this.vehicleLength = 8,
+    this.autoHideKeyBoard = false,
+    this.autoSwitchLetterKeyBoard = true,
+    this.showKeyBoard = false,
+    this.focusNode,
+    this.textAlign,
+    this.inputDecoration,
+    this.textStyle,
+  }) : super(key: key);
 
   @override
   State<VehicleField> createState() => _VehicleFieldState();
@@ -48,35 +47,35 @@ class _VehicleFieldState extends State<VehicleField> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _controller = TextEditingController();
 
-  OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
     super.initState();
 
     if (widget.focusNode != null) {
-      _focusNode = widget.focusNode;
+      _focusNode = widget.focusNode!;
     }
 
     if (widget.controller != null) {
-      _controller = widget.controller;
+      _controller = widget.controller!;
     }
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         this._overlayEntry = this._createOverlayEntry();
-        Overlay.of(context).insert(this._overlayEntry);
+        Overlay.of(context)?.insert(this._overlayEntry!);
         widget.showKeyBoard = true;
       } else {
-        this._overlayEntry.remove();
+        this._overlayEntry?.remove();
         widget.showKeyBoard = false;
       }
     });
   }
 
   OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject();
-    var size = renderBox.size;
+    RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    var size = renderBox?.size ?? Size.zero;
     // var offset = renderBox.localToGlobal(Offset.zero);
     double width = MediaQuery.of(context).size.width;
 
@@ -102,13 +101,13 @@ class _VehicleFieldState extends State<VehicleField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: widget.textStyle??TextStyle(fontSize: 14, color: Colors.black87),
+      style: widget.textStyle ?? TextStyle(fontSize: 14, color: Colors.black87),
       focusNode: this._focusNode,
       controller: _controller,
       textAlign: widget.textAlign ?? TextAlign.start,
       showCursor: true,
       readOnly: true,
-      decoration: widget.inputDecoration??InputDecoration(labelText: '请输入车牌'),
+      decoration: widget.inputDecoration ?? InputDecoration(labelText: '请输入车牌'),
     );
   }
 }
