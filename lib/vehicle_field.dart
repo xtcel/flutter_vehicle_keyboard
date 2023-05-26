@@ -26,6 +26,8 @@ class VehicleField extends StatefulWidget {
 
   final InputDecoration? inputDecoration;
 
+  final ValueChanged<String>? onChanged;
+
   VehicleField({
     Key? key,
     this.controller,
@@ -37,6 +39,7 @@ class VehicleField extends StatefulWidget {
     this.textAlign,
     this.inputDecoration,
     this.textStyle,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -71,6 +74,18 @@ class _VehicleFieldState extends State<VehicleField> {
         widget.showKeyBoard = false;
       }
     });
+
+    /// 监听内容变化
+    _controller.addListener(() {
+      widget.onChanged?.call(_controller.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   OverlayEntry _createOverlayEntry() {
