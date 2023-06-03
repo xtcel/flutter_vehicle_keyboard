@@ -19,10 +19,14 @@ class VehicleField extends StatefulWidget {
   /// text editing controller
   final TextEditingController? controller;
 
-  // TextFieldProps
+  /// TextFieldProps
   final TextAlign? textAlign;
-  //字体样式
+
+  /// 字体样式
   final TextStyle? textStyle;
+
+  /// 是否可用
+  final bool enabled;
 
   final InputDecoration? inputDecoration;
 
@@ -39,6 +43,7 @@ class VehicleField extends StatefulWidget {
     this.textAlign,
     this.inputDecoration,
     this.textStyle,
+    this.enabled = true,
     this.onChanged,
   }) : super(key: key);
 
@@ -66,11 +71,13 @@ class _VehicleFieldState extends State<VehicleField> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        this._overlayEntry = this._createOverlayEntry();
+        _overlayEntry = this._createOverlayEntry();
         Overlay.of(context)?.insert(this._overlayEntry!);
         widget.showKeyBoard = true;
       } else {
-        this._overlayEntry?.remove();
+        try {
+          _overlayEntry?.remove();
+        } catch (e) {}
         widget.showKeyBoard = false;
       }
     });
@@ -117,6 +124,7 @@ class _VehicleFieldState extends State<VehicleField> {
   Widget build(BuildContext context) {
     return TextField(
       style: widget.textStyle ?? TextStyle(fontSize: 14, color: Colors.black87),
+      enabled: widget.enabled,
       focusNode: this._focusNode,
       controller: _controller,
       textAlign: widget.textAlign ?? TextAlign.start,
